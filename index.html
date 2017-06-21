@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Doc Generator</title>
+	<link rel="icon" type="image/png" href="https://cdn0.iconfinder.com/data/icons/octicons/1024/markdown-512.png" />
+	<link href="https://fonts.googleapis.com/css?family=Courgette" rel="stylesheet" />
+	<!-- For offline mode, change href below with "simplemde.min.css" -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css" />
+	<style type="text/css">
+		body {
+			font-family: sans-serif;
+		}
+		.editor-toolbar a.export {
+			background-color: #17649a;
+			color: white !important;
+			width: 120px;
+		}
+		.editor-toolbar a.export:hover {
+			background-color: #1e81c8;
+			border-color: #1e81c8;
+		}
+		.editor-toolbar a.export::after {
+			content: 'Export';
+			margin-left: 10px;
+			font-family: sans-serif;
+		}
+		.editor-statusbar, .copyright {
+		    padding: 6px 10px;
+		    color: #ffffff;
+		    position: fixed;
+		    bottom: 0;
+		    right: 0;
+		    z-index: 9;
+		    width: 100%;
+		    background-color: #17649a;
+		}
+		.editor-toolbar h1 {
+			font-family: 'Courgette', cursive;
+			font-size: 24px;
+			color: #17649a;
+		    float: right;
+		    margin: 0;
+		    line-height: 32px;
+		    cursor: default;
+		    padding-right: 20px;
+		}
+		.copyright {
+			text-align: left;
+			left: 0;
+			width: auto;
+			background: transparent;
+			font-size: 12px;
+		}
+		.copyright a {
+			color: inherit;
+			font-weight: bold;
+			text-decoration: none;
+			outline: none;
+		}
+		.copyright a:hover {
+			text-decoration: underline;
+		}
+		.editor-preview-side, .CodeMirror-fullscreen {
+			bottom: 26px;
+		}
+		.hide {
+			visibility: hidden;
+		}
+		.snackbar {
+			display: none;
+		    pointer-events: none;
+		    position: absolute;
+		    width: 360px;
+		    height: 60px;
+		    z-index: 1000;
+		    background-color: #333333;
+		    color: #ffffff;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    border-radius: 3px;
+		    top: calc(50vh - 140px);
+		    left: calc(50vw - 180px);
+		    transform: translateY(-40px);
+		    animation: snack 2s forwards;
+		}
+		@keyframes snack {
+			0% {opacity: 0;}
+			20% {opacity: 1; transform: translateY(0px);}
+			75% {opacity: 1; transform: translateY(0px);}
+			100% {opacity: 0; transform: translateY(-20px);}
+		}
+		.export-container {
+			display: none;
+			z-index: 9999;
+			position: fixed;
+		}
+		.export-overlay {
+			position: fixed;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background-color: rgba(0,0,0,0.3);
+		}
+		.export-modal {
+			position: fixed;
+			width: 600px;
+			height: 400px;
+			top: calc(50vh - 200px);
+			left: calc(50vw - 300px);
+			display: flex;
+			flex-flow: column nowrap;
+			padding: 0 10px;
+			background-color: #ffffff;
+		}
+		.export-modal h4 {
+			margin: 10px 0;
+		    font-size: 24px;
+		    font-weight: 400;
+		}
+		.modal__input {
+			width: 100%;
+			flex: 1;
+			box-sizing: border-box;
+			border: none;
+			outline: none;
+			resize: none;
+		}
+		.modal__button {
+			width: 100%;
+		    padding: 10px 0;
+		    background-image: none;
+		    background-color: #17649a;
+		    border: none;
+		    margin: 10px 0;
+		    outline: none;
+		    color: #ffffff;
+		    font-family: sans-serif;
+		    cursor: pointer;
+		    border-radius: 3px;
+		    font-size: 16px;
+		}
+		.modal__button:hover {
+			background-color: #1e81c8;
+		}
+	</style>
+</head>
+<body>
+<textarea placeholder="Your content..."></textarea>
+<span class="copyright">Based on <a href="https://simplemde.com/" target="_blank">SimpleMDE</a> by <a href="https://www.sparksuite.com/" target="_blank">Sparksuite</a></span>
+<div class="export-container">
+	<div class="export-overlay"></div>
+	<div class="export-modal">
+		<h4>Select &amp; Copy</h4>
+		<textarea id="exported" class="modal__input"></textarea>
+		<button class="modal__button">Close</button>
+	</div>
+</div>
+<!-- For offline mode, change src below with "simplemde.min.js" -->
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script type="text/javascript">
+	var textarea = document.querySelector('#exported'),
+		exportContainer = document.querySelector('.export-container'),
+		closeModal = document.querySelector('.modal__button'),
+		simplemde = new SimpleMDE({
+		autofocus: true,
+		spellChecker: false,
+		toolbar: ["bold", "italic", "heading", "|", "quote", "unordered-list", "ordered-list", "|", "link", "image", "table", "|", {
+			name: "Export",
+			action: function exportContent(editor) {
+				var preview = document.querySelector("[class^='editor-preview']"),
+					content = preview.innerHTML;
+				if (!content) {
+					var snackbar = document.createElement("div"),
+			    		snackText = document.createTextNode("Veuillez d'abord encoder du contenu.");
+			    	snackbar.classList.add("snackbar");
+			    	snackbar.appendChild(snackText);
+					document.querySelector('body').appendChild(snackbar);
+					setTimeout(function() {document.querySelector('body').removeChild(snackbar)}, 2200);
+				}
+				else {
+					exportContainer.style.display = "block";
+					textarea.value = content;
+				}
+			},
+			className: "fa fa-clipboard export",
+			title: "Export",
+		}, "|", "guide", "preview", "side-by-side", "fullscreen"]}).toggleSideBySide();
+
+	closeModal.addEventListener('click', function() {
+		exportContainer.style.display = "none";
+	});
+
+	var previewIcon = document.querySelector('.fa-eye'),
+		sideBySideIcon = document.querySelector('.fa-columns'),
+		fullscreenIcon = document.querySelector('.fa-arrows-alt'),
+		windowControls = [previewIcon, sideBySideIcon, fullscreenIcon];
+
+	windowControls.forEach(function(button) {
+		button.classList.add("hide");
+	});
+
+	var toolbar = document.querySelector(".editor-toolbar"),
+		node = document.createElement("h1"),
+    	textnode = document.createTextNode("Doc Generator");
+
+    node.appendChild(textnode);
+	toolbar.appendChild(node);
+</script>
+</body>
+</html>
