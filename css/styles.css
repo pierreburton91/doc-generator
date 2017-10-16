@@ -1,0 +1,137 @@
+body {
+	font-family: sans-serif;
+}
+.editor-toolbar a.export {
+	background-color: #17649a;
+	color: white !important;
+	width: 120px;
+}
+.editor-toolbar a.export:hover {
+	background-color: #1e81c8;
+	border-color: #1e81c8;
+}
+.editor-toolbar a.export::after {
+	content: 'Export';
+	margin-left: 10px;
+	font-family: sans-serif;
+}
+.editor-statusbar, .copyright {
+    padding: 6px 10px;
+    color: #ffffff;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 9;
+    width: 100%;
+    background-color: #17649a;
+}
+.editor-toolbar h1 {
+	font-family: 'Courgette', cursive;
+	font-size: 24px;
+	color: #17649a;
+    float: right;
+    margin: 0;
+    line-height: 32px;
+    cursor: default;
+    padding-right: 20px;
+}
+.copyright {
+	text-align: left;
+	left: 0;
+	width: auto;
+	background: transparent;
+	font-size: 12px;
+}
+.copyright a {
+	color: inherit;
+	font-weight: bold;
+	text-decoration: none;
+	outline: none;
+}
+.copyright a:hover {
+	text-decoration: underline;
+}
+.editor-preview-side, .CodeMirror-fullscreen {
+	bottom: 26px;
+}
+.hide {
+	visibility: hidden;
+}
+.snackbar {
+	display: none;
+    pointer-events: none;
+    position: absolute;
+    width: 360px;
+    height: 60px;
+    z-index: 1000;
+    background-color: #333333;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    top: calc(50vh - 140px);
+    left: calc(50vw - 180px);
+    transform: translateY(-40px);
+    animation: snack 2s forwards;
+}
+@keyframes snack {
+	0% {opacity: 0;}
+	20% {opacity: 1; transform: translateY(0px);}
+	75% {opacity: 1; transform: translateY(0px);}
+	100% {opacity: 0; transform: translateY(-20px);}
+}
+.export-container {
+	display: none;
+	z-index: 9999;
+	position: fixed;
+}
+.export-overlay {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: rgba(0,0,0,0.3);
+}
+.export-modal {
+	position: fixed;
+	width: 600px;
+	height: 400px;
+	top: calc(50vh - 200px);
+	left: calc(50vw - 300px);
+	display: flex;
+	flex-flow: column nowrap;
+	padding: 0 10px;
+	background-color: #ffffff;
+}
+.export-modal h4 {
+	margin: 10px 0;
+    font-size: 24px;
+    font-weight: 400;
+}
+.modal__input {
+	width: 100%;
+	flex: 1;
+	box-sizing: border-box;
+	border: none;
+	outline: none;
+	resize: none;
+}
+.modal__button {
+	width: 100%;
+    padding: 10px 0;
+    background-image: none;
+    background-color: #17649a;
+    border: none;
+    margin: 10px 0;
+    outline: none;
+    color: #ffffff;
+    font-family: sans-serif;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 16px;
+}
+.modal__button:hover {
+	background-color: #1e81c8;
+}
